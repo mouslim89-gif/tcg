@@ -21,6 +21,7 @@ import type { Word } from '../../game/schema';
 import { typeMultiplier } from '../../game/typeChart';
 import type { Lexicon } from '../../game/words';
 import { CardView } from '../CardView';
+import { ConfirmButton } from '../ConfirmButton';
 import styles from './Board.module.css';
 
 interface Props {
@@ -230,10 +231,8 @@ export function Board({ initial, lexicon, db, difficulty, seed, onEnd }: Props) 
   };
 
   const forfeit = () => {
-    if (confirm('Forfeit this battle? It counts as a loss.')) {
-      alive.current = false;
-      onEnd('loss', spelledRef.current);
-    }
+    alive.current = false;
+    onEnd('loss', spelledRef.current);
   };
 
   const myTurn = state.active === PLAYER && !busy && state.winner === null;
@@ -323,9 +322,9 @@ export function Board({ initial, lexicon, db, difficulty, seed, onEnd }: Props) 
     <div className={styles.board}>
       <header className={styles.top}>
         {hpBar(AI, AI_PROFILE[difficulty].label)}
-        <button className={styles.forfeit} onClick={forfeit} aria-label="Forfeit">
+        <ConfirmButton className={styles.forfeit} ariaLabel="Forfeit" question="Forfeit?" confirmLabel="Forfeit" onConfirm={forfeit}>
           ✕
-        </button>
+        </ConfirmButton>
       </header>
 
       {renderField(AI)}

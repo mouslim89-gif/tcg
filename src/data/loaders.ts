@@ -1,4 +1,4 @@
-import { RARITIES, type Card, type Meta, type Rarity } from '../game/schema';
+import { RARITIES, strokeShard, type Card, type Meta, type Rarity } from '../game/schema';
 import { decodeWords, Lexicon } from '../game/words';
 
 // Static data lives in /public/data; each file is fetched once and memoised.
@@ -42,12 +42,13 @@ export function loadLexicon(): Promise<Lexicon> {
 let metaP: Promise<Meta> | null = null;
 export const loadMeta = (): Promise<Meta> => (metaP ??= get('meta.json', 'json'));
 
-const strokeCache = new Map<string, Promise<string[]>>();
+const shardCache = new Map<string, Promise<Record<string, string[]>>>();
 export function loadStrokes(id: string): Promise<string[]> {
-  let p = strokeCache.get(id);
+  const key = strokeShard(id);
+  let p = shardCache.get(key);
   if (!p) {
-    p = get(`strokes/${id}.json`, 'json');
-    strokeCache.set(id, p);
+    p = get(`strokes/${key}.json`, 'json');
+    shardCache.set(key, p);
   }
-  return p;
+  return p.then((shard) => shard[id] ?? Promise.reject(new Error(`no strokes for ${id}`)));
 }

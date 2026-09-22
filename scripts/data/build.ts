@@ -2,7 +2,7 @@ import { mkdir, rm, writeFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { execSync } from 'node:child_process';
-import { RARITIES, TYPES, type Card, type Meta, type Word } from '../../src/game/schema';
+import { RARITIES, strokeShard, TYPES, type Card, type Meta, type Word } from '../../src/game/schema';
 import { encodeWords } from '../../src/game/words';
 import { atkFromWords, defFromStrokes, rarityOf } from './balance';
 import { readJmdict } from './jmdict';
@@ -80,8 +80,15 @@ async function main() {
   await writeFile(join(OUT, 'cards.json'), JSON.stringify(cards));
   await rm(join(OUT, 'words.json'), { force: true });
   await writeFile(join(OUT, 'words.txt'), encodeWords([...words.values()]));
+  // Strokes are sharded by the first three hex digits (256 codepoints per file, ~90 files).
+  const shards = new Map<string, Record<string, string[]>>();
+  for (const c of cards) {
+    const key = strokeShard(c.id);
+    if (!shards.has(key)) shards.set(key, {});
+    shards.get(key)![c.id] = strokes.get(c.id)!;
+  }
   await Promise.all(
-    cards.map((c) => writeFile(join(OUT, 'strokes', `${c.id}.json`), JSON.stringify(strokes.get(c.id)))),
+    [...shards].map(([key, data]) => writeFile(join(OUT, 'strokes', `${key}.json`), JSON.stringify(data))),
   );
   const meta: Meta = {
     generatedAt: new Date().toISOString().slice(0, 10),

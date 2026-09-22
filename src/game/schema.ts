@@ -51,3 +51,6 @@ export interface Meta {
 }
 
 export const isJoyo = (c: Pick<Card, 'grade'>) => c.grade !== null && c.grade <= 8;
+
+/** Stroke data file holding a card: `strokes/<shard>.json`. */
+export const strokeShard = (id: string) => id.slice(0, 3);

@@ -41,7 +41,7 @@
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme='light']) {
     --paper: #121110;
     --paper-2: #1b1a18;
     --card: #211f1b;
@@ -60,6 +60,26 @@
     --rarity-legendary: #ff7a52;
     color-scheme: dark;
   }
+}
+
+:root[data-theme='dark'] {
+  --paper: #121110;
+  --paper-2: #1b1a18;
+  --card: #211f1b;
+  --ink: #ece6da;
+  --ink-2: #b1aa9b;
+  --ink-3: #7d776b;
+  --line: #36322b;
+  --seal: #e0533d;
+  --good: #7fbf6a;
+  --bad: #ef6a55;
+  --shadow: 0 1px 2px rgb(0 0 0 / 0.4), 0 6px 18px rgb(0 0 0 / 0.35);
+  --rarity-common: #8f897c;
+  --rarity-uncommon: #8fb0c8;
+  --rarity-rare: #dcae4a;
+  --rarity-epic: #a47ee8;
+  --rarity-legendary: #ff7a52;
+  color-scheme: dark;
 }
 
 *,

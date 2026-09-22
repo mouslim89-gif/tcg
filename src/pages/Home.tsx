@@ -5,6 +5,7 @@ import { useAsync } from '../data/useAsync';
 import { RARITIES } from '../game/schema';
 import { RARITY_INFO, TYPE_INFO } from '../game/labels';
 import { KanjiStroke } from '../components/KanjiStroke';
+import { ConfirmButton } from '../components/ConfirmButton';
 import { dailyAvailable, ECONOMY, useSave } from '../store/save';
 import styles from './Home.module.css';
 
@@ -145,14 +146,9 @@ export function Home() {
 
       <footer className={styles.footer}>
         <Link to="/credits">Data sources &amp; credits</Link>
-        <button
-          className={styles.reset}
-          onClick={() => {
-            if (confirm('Erase your collection and start over?')) save.reset();
-          }}
-        >
+        <ConfirmButton className={styles.reset} question="Erase your collection?" confirmLabel="Erase" onConfirm={save.reset}>
           Reset save
-        </button>
+        </ConfirmButton>
       </footer>
     </main>
   );
