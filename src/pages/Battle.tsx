@@ -4,7 +4,7 @@ import { loadCards, loadLexicon, type CardDb } from '../data/loaders';
 import { useAsync } from '../data/useAsync';
 import { AI_PROFILE, type Difficulty } from '../game/battle/ai';
 import { createBattle, RULES, type BattleState } from '../game/battle/engine';
-import { aiDeck, autoDeck, MAX_COPIES } from '../game/decks';
+import { aiDeck, autoDeck, checkDeck, deckWords } from '../game/decks';
 import { mulberry32, randomSeed } from '../game/rng';
 import type { Word } from '../game/schema';
 import type { Lexicon } from '../game/words';
@@ -85,25 +85,18 @@ function Setup({
   last: Extract<Phase, { kind: 'over' }> | null;
 }) {
   const collection = useSave((s) => s.collection);
-  const deck = useMemo(() => {
+  const saved = useSave((s) => s.deck ?? null);
+  const setDeck = useSave((s) => s.setDeck);
+  const auto = useMemo(() => {
     const owned = Object.entries(collection)
       .map(([id, count]) => ({ card: db.byId.get(id)!, count }))
       .filter((o) => o.card);
     return autoDeck(owned, lexicon);
   }, [collection, db, lexicon]);
-
-  const pairs = useMemo(() => {
-    const out: Word[] = [];
-    const kanji = new Set(deck.map((c) => c.kanji));
-    for (const k of kanji) {
-      for (const w of lexicon.byFirst.get(k) ?? []) {
-        if ([...w.w].length === 2 && [...w.w].every((c) => kanji.has(c))) out.push(w);
-      }
-    }
-    return out.sort((a, b) => Number(b.c) - Number(a.c));
-  }, [deck, lexicon]);
-
-  const ready = deck.length >= RULES.deckSize;
+  const custom = useMemo(() => (saved ? checkDeck(saved, collection, db.byId) : null), [saved, collection, db]);
+  const deck = custom ? custom.cards : auto;
+  const pairs = useMemo(() => deckWords(deck, lexicon), [deck, lexicon]);
+  const ready = custom ? custom.valid : auto.length >= RULES.deckSize;
 
   return (
     <main className="page">
@@ -125,6 +118,11 @@ function Setup({
                   </li>
                 ))}
               </ul>
+            )}
+            {last.words.length > 0 && (
+              <p className={styles.lexLink}>
+                <Link to="/words">All your words →</Link>
+              </p>
             )}
           </div>
         </section>
@@ -151,18 +149,21 @@ function Setup({
         <div className={styles.deckHead}>
           <h2>Your deck</h2>
           <span className="muted">
-            {Math.min(deck.length, RULES.deckSize)} / {RULES.deckSize} · built automatically (max {MAX_COPIES} copies)
+            {Math.min(deck.length, RULES.deckSize)} / {RULES.deckSize} · {custom ? 'custom' : 'built automatically'} ·{' '}
+            <Link to="/deck">Edit deck</Link>
           </span>
         </div>
+        {deck.length > 0 && (
+          <ul className={`${styles.deckList} jp`}>
+            {deck.map((c, i) => (
+              <li key={i} style={{ '--t': `var(--t-${c.type})` } as React.CSSProperties} title={c.meanings[0]}>
+                {c.kanji}
+              </li>
+            ))}
+          </ul>
+        )}
         {ready ? (
           <>
-            <ul className={`${styles.deckList} jp`}>
-              {deck.map((c, i) => (
-                <li key={i} style={{ '--t': `var(--t-${c.type})` } as React.CSSProperties} title={c.meanings[0]}>
-                  {c.kanji}
-                </li>
-              ))}
-            </ul>
             {pairs.length > 0 && (
               <p className={styles.pairs}>
                 <span className="muted">Words in your deck:</span>{' '}
@@ -178,6 +179,15 @@ function Setup({
               Start battle
             </button>
           </>
+        ) : custom ? (
+          <p>
+            Your custom deck has {deck.length} of {RULES.deckSize} cards. <Link to="/deck">Finish it →</Link>{' '}
+            {auto.length >= RULES.deckSize && (
+              <button className="btn ghost small" onClick={() => setDeck(null)}>
+                Use the auto-built deck
+              </button>
+            )}
+          </p>
         ) : (
           <p>
             You need at least {RULES.deckSize} cards to battle (you have {deck.length}).{' '}

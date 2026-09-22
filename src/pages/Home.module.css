@@ -166,7 +166,8 @@
   margin: 0;
 }
 
-.stats div {
+.stats div,
+.stats .statLink {
   background: var(--card);
   border: 1px solid var(--line);
   border-radius: var(--radius);
@@ -216,4 +217,15 @@
   text-decoration: underline;
   cursor: pointer;
   font-size: inherit;
+}
+
+.statLink {
+  display: block;
+  text-decoration: none;
+}
+
+.statLink dd::after {
+  content: ' →';
+  font-size: 0.9rem;
+  color: var(--ink-3);
 }

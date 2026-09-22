@@ -72,7 +72,9 @@ export function Collection() {
             <span className="muted"> / {db?.cards.length.toLocaleString('en') ?? '…'}</span>
           </h1>
         </div>
-        <p className="muted">{copies} cards total</p>
+        <p className="muted">
+          {copies} cards · <Link to="/deck">Edit deck</Link>
+        </p>
       </header>
 
       <div className={styles.toolbar}>

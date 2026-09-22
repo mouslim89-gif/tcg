@@ -6,6 +6,8 @@ import { Collection } from './pages/Collection';
 import { CardDetail } from './pages/CardDetail';
 import { Battle } from './pages/Battle';
 import { Credits } from './pages/Credits';
+import { Deck } from './pages/Deck';
+import { Words } from './pages/Words';
 
 export default function App() {
   return (
@@ -17,6 +19,8 @@ export default function App() {
         <Route path="/collection" element={<Collection />} />
         <Route path="/card/:id" element={<CardDetail />} />
         <Route path="/battle" element={<Battle />} />
+        <Route path="/deck" element={<Deck />} />
+        <Route path="/words" element={<Words />} />
         <Route path="/credits" element={<Credits />} />
         <Route path="*" element={<Home />} />
       </Routes>

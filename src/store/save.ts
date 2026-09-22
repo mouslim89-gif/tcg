@@ -26,6 +26,8 @@ export interface SaveData {
   /** Words the player has spelled in battle. */
   lexicon: string[];
   seen: string[];
+  /** Custom battle deck (card ids, duplicates allowed). null = built automatically. */
+  deck: string[] | null;
 }
 
 interface Actions {
@@ -33,6 +35,7 @@ interface Actions {
   claimDaily: () => boolean;
   recordBattle: (result: 'win' | 'loss' | 'draw', words: string[]) => number;
   markSeen: (ids: string[]) => void;
+  setDeck: (ids: string[] | null) => void;
   reset: () => void;
 }
 
@@ -49,6 +52,7 @@ const initial = (): SaveData => ({
   stats: { wins: 0, losses: 0, draws: 0, combos: 0 },
   lexicon: [],
   seen: [],
+  deck: null,
 });
 
 export const useSave = create<SaveData & Actions>()(
@@ -98,6 +102,10 @@ export const useSave = create<SaveData & Actions>()(
         set((s) => ({ seen: [...new Set([...s.seen, ...ids])] }));
       },
 
+      setDeck(ids) {
+        set({ deck: ids });
+      },
+
       reset() {
         set(initial());
       },
@@ -107,7 +115,7 @@ export const useSave = create<SaveData & Actions>()(
       version: 1,
       storage: createJSONStorage(() => localStorage),
       partialize: (s) => {
-        const { openPack: _o, claimDaily: _c, recordBattle: _r, markSeen: _m, reset: _x, ...data } = s;
+        const { openPack: _o, claimDaily: _c, recordBattle: _r, markSeen: _m, setDeck: _d, reset: _x, ...data } = s;
         return data;
       },
     },

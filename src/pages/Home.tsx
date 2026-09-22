@@ -115,10 +115,10 @@ export function Home() {
             <dt>Battles won</dt>
             <dd>{save.stats.wins}</dd>
           </div>
-          <div>
+          <Link to="/words" className={styles.statLink}>
             <dt>Words spelled</dt>
             <dd>{save.lexicon.length}</dd>
-          </div>
+          </Link>
         </dl>
       </section>
 

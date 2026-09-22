@@ -15,6 +15,7 @@ import {
   type SideId,
 } from '../../game/battle/engine';
 import type { Combo } from '../../game/combos';
+import { comboReadyHand, placementHints } from '../../game/battle/hints';
 import { isCorrect, makeQuiz, type Quiz } from '../../game/reading';
 import { mulberry32 } from '../../game/rng';
 import type { Word } from '../../game/schema';
@@ -241,6 +242,15 @@ export function Board({ initial, lexicon, db, difficulty, seed, onEnd }: Props) 
     [state, lexicon],
   );
   const previewLanes = new Set(preview.flatMap((c) => Array.from({ length: c.length }, (_, i) => c.start + i)));
+  // Where the selected card would complete a word, and which hand cards can complete one at all.
+  const hints = useMemo(
+    () => (myTurn && selected !== null ? placementHints(state, selected, lexicon) : new Map<number, Combo[]>()),
+    [myTurn, selected, state, lexicon],
+  );
+  const comboReady = useMemo(
+    () => (myTurn ? comboReadyHand(state, lexicon) : new Set<number>()),
+    [myTurn, state, lexicon],
+  );
 
   const me = state.sides[PLAYER];
   const foe = state.sides[AI];
@@ -259,7 +269,7 @@ export function Board({ initial, lexicon, db, difficulty, seed, onEnd }: Props) 
             key={lane}
             className={`${styles.lane} ${targetable ? styles.targetable : ''} ${
               side === PLAYER && previewLanes.has(lane) ? styles.inWord : ''
-            }`}
+            } ${side === PLAYER && hints.has(lane) ? styles.hinted : ''}`}
             onClick={() => tapLane(lane)}
             disabled={side !== PLAYER}
             aria-label={u ? `${side === PLAYER ? 'Your' : 'Opponent'} lane ${lane + 1}: ${u.card.kanji}` : `${side === PLAYER ? 'Your' : 'Opponent'} empty lane ${lane + 1}`}
@@ -276,6 +286,9 @@ export function Board({ initial, lexicon, db, difficulty, seed, onEnd }: Props) 
               />
             ) : (
               <span className={styles.empty} />
+            )}
+            {side === PLAYER && hints.has(lane) && (
+              <span className={`${styles.hintWord} jp`}>{hints.get(lane)!.map((c) => c.word.w).join(' ')}</span>
             )}
             {laneFx(side, lane).map((f) => (
               <span key={f.id} className={`${styles.fx} ${styles[f.tone]}`}>
@@ -369,7 +382,7 @@ export function Board({ initial, lexicon, db, difficulty, seed, onEnd }: Props) 
           {me.hand.map((c, i) => (
             <button
               key={`${c.id}-${i}`}
-              className={`${styles.handCard} ${selected === i ? styles.selected : ''}`}
+              className={`${styles.handCard} ${selected === i ? styles.selected : ''} ${comboReady.has(i) ? styles.canCombo : ''}`}
               onClick={() => myTurn && state.playsLeft > 0 && setSelected(selected === i ? null : i)}
               disabled={!myTurn || state.playsLeft === 0}
               role="option"

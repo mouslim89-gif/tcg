@@ -1,4 +1,4 @@
-import type { Card, Rarity } from './schema';
+import type { Card, Rarity, Word } from './schema';
 import { RULES } from './battle/engine';
 import type { Difficulty } from './battle/ai';
 import { shuffle, type Rng } from './rng';
@@ -73,4 +73,67 @@ export function aiDeck(cards: Card[], lexicon: Lexicon, difficulty: Difficulty, 
     [...owned].map(([k, count]) => ({ card: byKanji.get(k)!, count })),
     lexicon,
   );
+}
+
+/** Two-kanji words spelled entirely by kanji present in the deck, common words first. */
+export function deckWords(deck: readonly Card[], lexicon: Lexicon): Word[] {
+  const copies = new Map<string, number>();
+  for (const c of deck) copies.set(c.kanji, (copies.get(c.kanji) ?? 0) + 1);
+  const out: Word[] = [];
+  for (const k of copies.keys()) {
+    for (const w of lexicon.byFirst.get(k) ?? []) {
+      const [a, b, ...rest] = [...w.w];
+      // A doubled kanji (時時) needs both copies in the deck.
+      if (!rest.length && b && copies.has(b) && (a !== b || copies.get(a)! >= 2)) out.push(w);
+    }
+  }
+  return out.sort((a, b) => Number(b.c) - Number(a.c) || a.w.localeCompare(b.w));
+}
+
+/**
+ * Words that one owned card would complete with a kanji already in the deck:
+ * the cheapest way to add combos. Returns the word and the card to add.
+ */
+export function pairSuggestions(
+  deck: readonly Card[],
+  owned: ReadonlyMap<string, { card: Card; count: number }>,
+  lexicon: Lexicon,
+  limit = 12,
+): { word: Word; add: Card }[] {
+  const inDeck = new Map<string, number>();
+  for (const c of deck) inDeck.set(c.kanji, (inDeck.get(c.kanji) ?? 0) + 1);
+  const seen = new Set<string>();
+  const out: { word: Word; add: Card; score: number }[] = [];
+  for (const k of inDeck.keys()) {
+    for (const w of lexicon.byKanji.get(k) ?? []) {
+      const chars = [...w.w];
+      if (chars.length !== 2 || seen.has(w.w)) continue;
+      const missing = chars.filter((c) => !inDeck.has(c));
+      if (missing.length !== 1) continue;
+      const o = owned.get(missing[0]);
+      if (!o) continue;
+      seen.add(w.w);
+      out.push({ word: w, add: o.card, score: (w.c ? 10 : 0) + o.card.atk + o.card.def });
+    }
+  }
+  return out.sort((a, b) => b.score - a.score).slice(0, limit).map(({ word, add }) => ({ word, add }));
+}
+
+/** Checks a saved deck (card ids) against the collection. */
+export function checkDeck(
+  ids: readonly string[],
+  collection: Readonly<Record<string, number>>,
+  byId: ReadonlyMap<string, Card>,
+  size = RULES.deckSize,
+): { cards: Card[]; valid: boolean } {
+  const counts = new Map<string, number>();
+  const cards: Card[] = [];
+  for (const id of ids) {
+    const card = byId.get(id);
+    const n = (counts.get(id) ?? 0) + 1;
+    if (!card || n > MAX_COPIES || n > (collection[id] ?? 0)) continue;
+    counts.set(id, n);
+    cards.push(card);
+  }
+  return { cards, valid: cards.length === size && cards.length === ids.length };
 }
