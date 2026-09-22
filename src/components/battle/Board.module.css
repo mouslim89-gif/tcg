@@ -1,0 +1,493 @@
+.board {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  background:
+    radial-gradient(90% 40% at 50% 50%, color-mix(in srgb, var(--seal) 5%, transparent), transparent),
+    var(--paper);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: calc(10px + env(safe-area-inset-top)) 12px calc(10px + env(safe-area-inset-bottom));
+  max-width: 640px;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+@media (min-width: 640px) {
+  .board {
+    box-shadow: 0 0 0 100vmax var(--paper-2);
+  }
+}
+
+.top {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.top .hpRow {
+  flex: 1;
+}
+
+.forfeit {
+  appearance: none;
+  border: 1px solid var(--line);
+  background: var(--card);
+  border-radius: 50%;
+  width: 34px;
+  height: 34px;
+  cursor: pointer;
+  color: var(--ink-2);
+}
+
+.hpRow {
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+}
+
+.who {
+  font-family: var(--font-display);
+  font-weight: 700;
+  min-width: 3.2em;
+}
+
+.hp {
+  height: 10px;
+  border-radius: 5px;
+  background: var(--paper-2);
+  overflow: hidden;
+  border: 1px solid var(--line);
+}
+
+.hpFill {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, var(--seal), color-mix(in srgb, var(--seal) 70%, #f0b04a));
+  transition: width 0.5s ease;
+}
+
+.hpNum {
+  position: relative;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  min-width: 2ch;
+  text-align: right;
+}
+
+.piles {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+}
+
+.piles :global(.jp) {
+  font-size: 0.8rem;
+  margin-left: 4px;
+}
+
+.field {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  flex: 0 0 auto;
+}
+
+.lane {
+  appearance: none;
+  position: relative;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  border-radius: 10px;
+  aspect-ratio: 63 / 88;
+  max-height: 24dvh;
+  justify-self: center;
+  width: 100%;
+}
+
+.lane:disabled {
+  cursor: default;
+}
+
+.empty {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  border: 1.5px dashed var(--line);
+  background: color-mix(in srgb, var(--paper-2) 50%, transparent);
+}
+
+.theirs .empty {
+  border-style: dotted;
+}
+
+.targetable .empty,
+.targetable :global(> *:first-child) {
+  outline: 2px solid var(--seal);
+  outline-offset: 2px;
+  border-radius: 10px;
+  animation: breathe 1.2s ease-in-out infinite;
+}
+
+@keyframes breathe {
+  50% {
+    outline-color: color-mix(in srgb, var(--seal) 30%, transparent);
+  }
+}
+
+.inWord::after {
+  content: '';
+  position: absolute;
+  left: -4px;
+  right: -4px;
+  bottom: -7px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--seal);
+}
+
+.unit {
+  animation: land 0.35s cubic-bezier(0.2, 0.8, 0.3, 1.3);
+}
+
+.fresh {
+  filter: saturate(0.9);
+}
+
+.hurt :global(.jp) {
+  opacity: 1;
+}
+
+@keyframes land {
+  from {
+    transform: translateY(18px) scale(0.9);
+    opacity: 0;
+  }
+}
+
+.fx {
+  position: absolute;
+  left: 50%;
+  top: 35%;
+  transform: translate(-50%, 0);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.4rem;
+  pointer-events: none;
+  white-space: nowrap;
+  text-shadow: 0 1px 0 var(--paper), 0 0 8px var(--paper);
+  animation: float 1.2s ease-out forwards;
+  z-index: 2;
+}
+
+.hpNum .fx {
+  top: -6px;
+  left: auto;
+  right: 0;
+  transform: none;
+  font-size: 1.1rem;
+}
+
+.hit {
+  color: var(--bad);
+}
+
+.combo {
+  color: var(--seal);
+  font-size: 1.7rem;
+}
+
+.info {
+  font-family: var(--font-kanji);
+  color: var(--ink);
+  font-size: 2.4rem;
+  top: 20%;
+}
+
+@keyframes float {
+  from {
+    opacity: 0;
+    translate: 0 8px;
+  }
+  15% {
+    opacity: 1;
+    translate: 0 0;
+  }
+  to {
+    opacity: 0;
+    translate: 0 -26px;
+  }
+}
+
+.middle {
+  flex: 1 1 auto;
+  min-height: 44px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+}
+
+.matchups {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-align: center;
+  min-height: 1em;
+}
+
+.matchup {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+}
+
+.up {
+  color: var(--good);
+}
+
+.down {
+  color: var(--bad);
+}
+
+.message {
+  margin: 0;
+  text-align: center;
+  font-size: 0.88rem;
+  color: var(--ink-2);
+  min-height: 2.6em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 2px;
+}
+
+.message :global(.jp) {
+  font-size: 1.1rem;
+  color: var(--ink);
+}
+
+.comboTag {
+  background: var(--seal);
+  color: #fff;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border-radius: 4px;
+  padding: 1px 6px;
+  margin-right: 4px;
+}
+
+.bottom {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.hand {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 10px 2px 4px;
+  min-height: 96px;
+  scrollbar-width: none;
+}
+
+.hand::-webkit-scrollbar {
+  display: none;
+}
+
+.hand > p {
+  margin: auto;
+  font-size: 0.85rem;
+}
+
+.handCard {
+  appearance: none;
+  flex: 0 0 auto;
+  width: clamp(58px, 17vw, 86px);
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.handCard:disabled {
+  cursor: default;
+  opacity: 0.75;
+}
+
+.selected {
+  transform: translateY(-10px);
+}
+
+.selected > * {
+  filter: drop-shadow(0 0 0 var(--seal)) drop-shadow(0 4px 10px color-mix(in srgb, var(--seal) 45%, transparent));
+}
+
+.actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.plays {
+  font-size: 0.8rem;
+  color: var(--ink-3);
+  text-align: center;
+}
+
+.modalBack {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  background: rgb(10 8 5 / 0.55);
+  backdrop-filter: blur(3px);
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  animation: fade 0.2s ease;
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+}
+
+.modal {
+  width: min(100%, 380px);
+  background: var(--card);
+  border-radius: 20px;
+  padding: 22px 20px 20px;
+  text-align: center;
+  box-shadow: 0 20px 60px rgb(0 0 0 / 0.35);
+  animation: pop 0.3s cubic-bezier(0.2, 0.8, 0.3, 1.3);
+}
+
+@keyframes pop {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+}
+
+.quizWord {
+  font-size: 3.6rem;
+  font-weight: 700;
+  line-height: 1.1;
+  margin: 6px 0 4px;
+  letter-spacing: 0.04em;
+}
+
+.quizGloss {
+  font-family: var(--font-display);
+  font-style: italic;
+  color: var(--ink-2);
+  margin: 0 0 14px;
+}
+
+.quizAsk {
+  font-size: 0.85rem;
+  color: var(--ink-3);
+  margin: 0 0 12px;
+}
+
+.options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.option {
+  appearance: none;
+  min-height: 52px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, opacity 0.2s;
+}
+
+.option:disabled {
+  cursor: default;
+}
+
+.right {
+  background: color-mix(in srgb, var(--good) 20%, var(--paper));
+  border-color: var(--good);
+}
+
+.wrong {
+  background: color-mix(in srgb, var(--bad) 18%, var(--paper));
+  border-color: var(--bad);
+}
+
+.dim {
+  opacity: 0.4;
+}
+
+.verdict {
+  margin: 12px 0 0;
+  font-weight: 600;
+}
+
+/* Combo hints: the selected card would complete a word in this lane. */
+.hinted .empty,
+.hinted :global(> *:first-child) {
+  outline-color: var(--good);
+}
+
+.hintWord {
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  top: -0.9em;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  background: var(--good);
+  color: #fff;
+  font-size: 0.95rem;
+  line-height: 1;
+  padding: 0.25em 0.5em;
+  border-radius: 999px;
+  box-shadow: var(--shadow);
+  pointer-events: none;
+}
+
+/* Hand cards that can complete a word somewhere this turn. */
+.canCombo {
+  position: relative;
+}
+
+.canCombo::after {
+  content: '語';
+  position: absolute;
+  top: 2px;
+  right: -4px;
+  width: 20px;
+  height: 20px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--good);
+  color: #fff;
+  font-family: var(--font-kanji);
+  font-size: 11px;
+  box-shadow: var(--shadow);
+}

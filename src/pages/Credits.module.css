@@ -1,0 +1,31 @@
+.page {
+  max-width: 720px;
+}
+
+.lede {
+  font-size: 1.05rem;
+  color: var(--ink-2);
+}
+
+.page section {
+  border-top: 1px solid var(--line);
+  padding-top: 18px;
+  margin-top: 22px;
+}
+
+.page h2 {
+  font-size: 1.25rem;
+}
+
+.page code {
+  font-size: 0.88em;
+  background: var(--paper-2);
+  padding: 0.1em 0.35em;
+  border-radius: 4px;
+}
+
+.build {
+  margin-top: 32px;
+  font-size: 0.8rem;
+  color: var(--ink-3);
+}

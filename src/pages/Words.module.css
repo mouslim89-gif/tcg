@@ -1,0 +1,80 @@
+.head {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.head h1 {
+  margin: 0;
+  font-size: 2rem;
+}
+
+.head h1 span {
+  font-size: 1.1rem;
+  font-weight: 400;
+}
+
+.order {
+  display: flex;
+  gap: 6px;
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 0 24px;
+}
+
+.list li {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-areas:
+    'word reading'
+    'word gloss';
+  column-gap: 14px;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.word {
+  grid-area: word;
+  font-size: 1.7rem;
+  min-width: 3.2em;
+}
+
+.word a {
+  text-decoration: none;
+}
+
+.word a.missing {
+  color: var(--ink-3);
+}
+
+.reading {
+  grid-area: reading;
+  font-size: 0.95rem;
+}
+
+.gloss {
+  grid-area: gloss;
+  font-size: 0.85rem;
+  color: var(--ink-2);
+}
+
+.empty {
+  text-align: center;
+  padding: 40px 0;
+  color: var(--ink-2);
+}
+
+.empty .jp {
+  font-size: 3.4rem;
+  margin: 0;
+  color: var(--ink-3);
+}

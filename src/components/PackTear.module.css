@@ -1,0 +1,268 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.pack {
+  --h: 158.7cqw; /* 63:100 wrapper */
+  --line: 18cqw;
+  container-type: inline-size;
+  position: relative;
+  width: min(64vw, 250px);
+  aspect-ratio: 63 / 100;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  cursor: grab;
+  outline: none;
+  filter: drop-shadow(0 10px 18px rgb(40 20 10 / 0.28));
+}
+
+.pack:focus-visible {
+  filter: drop-shadow(0 0 0 var(--seal)) drop-shadow(0 0 6px var(--seal));
+}
+
+.pack:active {
+  cursor: grabbing;
+}
+
+.disabled {
+  filter: grayscale(0.9) opacity(0.5);
+  cursor: default;
+}
+
+.nudge {
+  animation: nudge 0.45s ease;
+}
+
+@keyframes nudge {
+  20% {
+    transform: rotate(-2deg);
+  }
+  45% {
+    transform: rotate(1.6deg);
+  }
+  70% {
+    transform: rotate(-0.8deg);
+  }
+}
+
+.body,
+.strip {
+  position: absolute;
+  left: 0;
+  right: 0;
+  overflow: hidden;
+}
+
+.body {
+  top: var(--line);
+  bottom: 0;
+  z-index: 2;
+}
+
+.strip {
+  top: 0;
+  height: calc(var(--line) + 5cqw);
+  z-index: 3;
+  transition: transform 0.08s linear;
+}
+
+/* The printed wrapper: red foil with crimped ends. */
+.skin {
+  position: absolute;
+  left: 0;
+  width: 100cqw;
+  height: var(--h);
+  border-radius: 2.5cqw;
+  overflow: hidden;
+  color: #fff;
+  background:
+    linear-gradient(115deg, transparent 30%, rgb(255 255 255 / 0.16) 42%, transparent 54%),
+    repeating-linear-gradient(135deg, rgb(255 255 255 / 0.045) 0 1cqw, transparent 1cqw 4cqw),
+    radial-gradient(120% 80% at 30% 25%, #e25a44, #a82b1e 60%, #6d1a12);
+}
+
+.crimpTop,
+.crimpBottom {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 6cqw;
+  background: repeating-linear-gradient(90deg, rgb(0 0 0 / 0.2) 0 1.1cqw, rgb(255 255 255 / 0.12) 1.1cqw 2.2cqw);
+}
+
+.crimpTop {
+  top: 0;
+}
+
+.crimpBottom {
+  bottom: 0;
+}
+
+.perf {
+  position: absolute;
+  left: 5cqw;
+  right: 5cqw;
+  border-top: 0.7cqw dashed rgb(255 255 255 / 0.6);
+}
+
+.perf span {
+  position: absolute;
+  left: 0;
+  top: -5.5cqw;
+  font-size: 3.2cqw;
+  letter-spacing: 0.3em;
+  opacity: 0.75;
+}
+
+.seal {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 52cqw;
+  text-align: center;
+  font-size: 42cqw;
+  font-weight: 900;
+  line-height: 1;
+  text-shadow: 0 0.8cqw 0 rgb(0 0 0 / 0.2);
+}
+
+.name {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 104cqw;
+  text-align: center;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 6.4cqw;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.sub {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 114cqw;
+  text-align: center;
+  font-size: 4.4cqw;
+  opacity: 0.8;
+}
+
+/* The white inside of the foil, shown along the torn part of the line. */
+.edge {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 4.2cqw;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.edge polyline {
+  fill: none;
+  stroke: #fbf6ec;
+  stroke-width: 2.4px;
+  vector-effect: non-scaling-stroke;
+  stroke-linejoin: round;
+}
+
+/* A fingertip showing the gesture. */
+.finger {
+  position: absolute;
+  z-index: 4;
+  left: 6%;
+  width: 7cqw;
+  height: 7cqw;
+  margin-top: -3.5cqw;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 0.85);
+  box-shadow: 0 0 0 1.6cqw rgb(255 255 255 / 0.25);
+  pointer-events: none;
+  animation: swipe 2.2s cubic-bezier(0.5, 0, 0.3, 1) infinite;
+}
+
+@keyframes swipe {
+  0% {
+    left: 6%;
+    opacity: 0;
+    transform: scale(1.3);
+  }
+  15% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  70% {
+    left: 86%;
+    opacity: 1;
+  }
+  85%,
+  100% {
+    left: 86%;
+    opacity: 0;
+  }
+}
+
+/* Cards waiting inside, slid out once the pack is open. */
+.stack {
+  position: absolute;
+  z-index: 1;
+  left: 12cqw;
+  right: 12cqw;
+  top: calc(var(--line) + 8cqw);
+  aspect-ratio: 63 / 88;
+}
+
+.stack span {
+  position: absolute;
+  inset: 0;
+  border-radius: 4cqw;
+  background:
+    repeating-linear-gradient(45deg, rgb(255 255 255 / 0.06) 0 0.8cqw, transparent 0.8cqw 3cqw),
+    linear-gradient(160deg, #2a2723, #121110);
+  box-shadow: 0 0 0 0.5cqw rgb(255 255 255 / 0.1);
+  transform: translateY(calc(var(--k) * -1.2cqw)) rotate(calc((var(--k) - 1) * 2deg));
+}
+
+.torn .strip {
+  animation: fly 0.55s cubic-bezier(0.3, 0.1, 0.4, 1) forwards;
+}
+
+@keyframes fly {
+  to {
+    transform: translate(calc(var(--dir) * 45cqw), -55cqw) rotate(calc(var(--dir) * -32deg));
+    opacity: 0;
+  }
+}
+
+.torn .stack {
+  animation: rise 0.55s cubic-bezier(0.25, 0.8, 0.3, 1) 0.28s forwards;
+}
+
+@keyframes rise {
+  to {
+    transform: translateY(-36cqw);
+  }
+}
+
+.torn .body {
+  animation: drop 0.4s ease-in 0.62s forwards;
+}
+
+@keyframes drop {
+  to {
+    transform: translateY(18cqw);
+    opacity: 0;
+  }
+}
+
+.help {
+  margin: 0;
+  font-size: 0.88rem;
+  color: var(--ink-2);
+}

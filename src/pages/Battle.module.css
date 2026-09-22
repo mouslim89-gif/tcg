@@ -1,0 +1,179 @@
+.opponents {
+  display: grid;
+  gap: 10px;
+  margin: 12px 0 28px;
+}
+
+@media (min-width: 640px) {
+  .opponents {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.opponent {
+  appearance: none;
+  border: 1px solid var(--line);
+  background: var(--card);
+  border-radius: 16px;
+  padding: 14px 16px;
+  cursor: pointer;
+  text-align: left;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto auto;
+  column-gap: 14px;
+  align-items: center;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.opponent[aria-pressed='true'] {
+  border-color: var(--seal);
+  box-shadow: 0 0 0 1px var(--seal);
+}
+
+.oppGlyph {
+  grid-row: span 2;
+  font-size: 2rem;
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  background: var(--paper-2);
+}
+
+.opponent[aria-pressed='true'] .oppGlyph {
+  background: var(--seal);
+  color: #fff;
+}
+
+.opponent strong {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+}
+
+.opponent .muted {
+  font-size: 0.85rem;
+}
+
+.deck {
+  border-top: 1px solid var(--line);
+  padding-top: 18px;
+}
+
+.deckHead {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 4px 12px;
+}
+
+.deckHead span {
+  font-size: 0.82rem;
+}
+
+.deckList {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0 12px;
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 5px;
+}
+
+.deckList li {
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  font-size: clamp(1rem, 4.6vw, 1.6rem);
+  border-radius: 8px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-bottom: 3px solid var(--t);
+}
+
+.pairs {
+  font-size: 0.9rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  margin: 0 0 18px;
+}
+
+.pairs :global(.jp) {
+  font-size: 1.05rem;
+}
+
+.rules {
+  margin-top: 28px;
+  border-top: 1px solid var(--line);
+  padding-top: 14px;
+  color: var(--ink-2);
+  font-size: 0.92rem;
+}
+
+.rules summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.rules ul {
+  padding-left: 1.2em;
+  display: grid;
+  gap: 6px;
+}
+
+.result {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 16px 18px;
+  margin-bottom: 28px;
+  box-shadow: var(--shadow);
+}
+
+.result h1 {
+  margin: 0 0 4px;
+}
+
+.result p {
+  margin: 0;
+}
+
+.resultGlyph {
+  font-size: 3.6rem;
+  line-height: 1;
+  width: 76px;
+  height: 76px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  color: #fff;
+  background: var(--ink-3);
+}
+
+.win .resultGlyph {
+  background: var(--seal);
+}
+
+.spelled {
+  list-style: none;
+  padding: 0;
+  margin: 8px 0 0;
+  font-size: 0.88rem;
+}
+
+.spelled :global(.jp) {
+  font-size: 1rem;
+}
+
+.lexLink {
+  margin-top: 6px !important;
+  font-size: 0.88rem;
+}
