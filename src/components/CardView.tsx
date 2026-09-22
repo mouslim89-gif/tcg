@@ -8,6 +8,8 @@ interface Props {
   /** Draw the kanji with KanjiVG strokes (animated) instead of the font. */
   strokes?: boolean;
   replay?: number;
+  /** Full stroke-order pace (card detail) instead of the quick reveal. */
+  slowStrokes?: boolean;
   count?: number;
   isNew?: boolean;
   /** Shows current / max DEF in battle. */
@@ -18,7 +20,7 @@ interface Props {
   onClick?: () => void;
 }
 
-export function CardView({ card, strokes, replay, count, isNew, hp, atkBonus, compact, className, onClick }: Props) {
+export function CardView({ card, strokes, replay, slowStrokes, count, isNew, hp, atkBonus, compact, className, onClick }: Props) {
   const type = TYPE_INFO[card.type];
   const Tag = onClick ? 'button' : 'div';
   return (
@@ -39,7 +41,13 @@ export function CardView({ card, strokes, replay, count, isNew, hp, atkBonus, co
           </span>
         </span>
         <span className={styles.glyph}>
-          {strokes ? <KanjiStroke id={card.id} kanji={card.kanji} animate replay={replay} speed={0.12} total={0.9} /> : card.kanji}
+          {strokes ? <KanjiStroke
+              id={card.id}
+              kanji={card.kanji}
+              animate
+              replay={replay}
+              {...(slowStrokes ? {} : { speed: 0.12, total: 0.9 })}
+            /> : card.kanji}
         </span>
         {!compact && <span className={styles.meaning}>{card.meanings[0] ?? '—'}</span>}
         <span className={styles.stats}>

@@ -64,7 +64,7 @@ export function CardDetail() {
       <div className={styles.layout}>
         <div className={styles.cardCol}>
           <div className={styles.cardWrap}>
-            <CardView card={card} strokes replay={replay} />
+            <CardView card={card} strokes slowStrokes replay={replay} />
           </div>
           <button className="btn ghost small" onClick={() => setReplay((r) => r + 1)}>
             ↻ Replay strokes
