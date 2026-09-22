@@ -1,0 +1,237 @@
+.head {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  margin-bottom: 20px;
+}
+
+.head h1 {
+  margin: 0;
+}
+
+.count {
+  margin: 0;
+  color: var(--ink-2);
+}
+
+.count strong {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  color: var(--ink);
+}
+
+.stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  text-align: center;
+  padding-top: 8px;
+}
+
+.pack {
+  appearance: none;
+  width: min(62vw, 240px);
+  aspect-ratio: 63 / 96;
+  border-radius: 18px;
+  border: 0;
+  cursor: pointer;
+  color: #fff;
+  background:
+    repeating-linear-gradient(135deg, rgb(255 255 255 / 0.05) 0 2px, transparent 2px 10px),
+    radial-gradient(120% 80% at 30% 20%, #e25a44, #a82b1e 60%, #6d1a12);
+  box-shadow: var(--shadow), inset 0 0 0 6px rgb(255 255 255 / 0.12), inset 0 0 0 7px rgb(0 0 0 / 0.15);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  animation: bob 3.2s ease-in-out infinite;
+  transition: transform 0.2s;
+}
+
+.pack:disabled {
+  filter: grayscale(0.9);
+  opacity: 0.5;
+  animation: none;
+  cursor: default;
+}
+
+.pack:not(:disabled):hover {
+  transform: rotate(-2deg) scale(1.02);
+}
+
+@keyframes bob {
+  50% {
+    translate: 0 -6px;
+  }
+}
+
+.packSeal {
+  font-size: 5.5rem;
+  line-height: 1;
+  font-weight: 900;
+  text-shadow: 0 2px 0 rgb(0 0 0 / 0.2);
+}
+
+.packName {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 0.95rem;
+}
+
+.packSub {
+  font-size: 0.8rem;
+  opacity: 0.8;
+}
+
+.pity {
+  font-size: 0.88rem;
+  color: var(--ink-2);
+  margin: 0;
+}
+
+.odds {
+  font-size: 0.85rem;
+  color: var(--ink-2);
+  width: min(100%, 280px);
+}
+
+.odds summary {
+  cursor: pointer;
+}
+
+.odds ul {
+  list-style: none;
+  padding: 0;
+  margin: 8px 0 0;
+}
+
+.odds li {
+  display: flex;
+  justify-content: space-between;
+  padding: 2px 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.reveal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 34px 12px;
+  width: 100%;
+  max-width: 420px;
+}
+
+/* 3 + 2 layout on phones, centred second row. */
+.slot {
+  grid-column: span 2;
+  position: relative;
+  aspect-ratio: 63 / 88;
+  perspective: 900px;
+  animation: deal 0.45s cubic-bezier(0.2, 0.8, 0.3, 1.2) both;
+  animation-delay: calc(var(--i) * 0.08s);
+}
+
+.slot:nth-child(4) {
+  grid-column: 2 / span 2;
+}
+
+@media (min-width: 720px) {
+  .row {
+    grid-template-columns: repeat(5, 1fr);
+    max-width: 820px;
+    gap: 34px 18px;
+  }
+
+  .slot,
+  .slot:nth-child(4) {
+    grid-column: auto;
+  }
+}
+
+@keyframes deal {
+  from {
+    opacity: 0;
+    transform: translateY(40px) rotate(-6deg);
+  }
+}
+
+.back,
+.front {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transition: transform 0.55s cubic-bezier(0.3, 0.7, 0.3, 1);
+}
+
+.back {
+  appearance: none;
+  border: 0;
+  border-radius: 10px;
+  cursor: pointer;
+  color: rgb(255 255 255 / 0.9);
+  font-size: 2.6rem;
+  background:
+    repeating-linear-gradient(45deg, rgb(255 255 255 / 0.06) 0 2px, transparent 2px 8px),
+    linear-gradient(160deg, #2a2723, #121110);
+  box-shadow: var(--shadow), inset 0 0 0 3px rgb(255 255 255 / 0.08);
+}
+
+.glow_rare {
+  box-shadow: 0 0 0 2px var(--rarity-rare), 0 0 18px var(--rarity-rare);
+}
+
+.glow_epic {
+  box-shadow: 0 0 0 2px var(--rarity-epic), 0 0 22px var(--rarity-epic);
+}
+
+.glow_legendary {
+  box-shadow: 0 0 0 2px var(--rarity-legendary), 0 0 28px var(--rarity-legendary);
+  animation: pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  50% {
+    box-shadow: 0 0 0 2px #ffd36e, 0 0 40px var(--rarity-legendary);
+  }
+}
+
+.front {
+  transform: rotateY(180deg);
+}
+
+.flipped .back {
+  transform: rotateY(-180deg);
+}
+
+.flipped .front {
+  transform: rotateY(0);
+}
+
+.caption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -20px;
+  text-align: center;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+}

@@ -1,0 +1,237 @@
+.card {
+  --edge: var(--line);
+  --frame: var(--edge);
+  container-type: inline-size;
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 63 / 88;
+  padding: 0;
+  border: 0;
+  background: none;
+  text-align: left;
+  color: var(--ink);
+  font: inherit;
+  cursor: default;
+  transition: transform 0.15s ease;
+}
+
+button.card {
+  cursor: pointer;
+}
+
+button.card:active {
+  transform: scale(0.97);
+}
+
+.inner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border-radius: 8cqw;
+  border: 2.4cqw solid transparent;
+  background:
+    radial-gradient(120% 70% at 50% 45%, transparent 60%, color-mix(in srgb, var(--type) 10%, transparent)) padding-box,
+    linear-gradient(var(--card), var(--card)) padding-box,
+    var(--frame) border-box;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  padding: 5cqw 6cqw 5cqw;
+}
+
+/* A thin wash of the type colour along the top edge. */
+.inner::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  height: 2.6cqw;
+  background: var(--type);
+  opacity: 0.85;
+}
+
+.head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1cqw;
+}
+
+.type {
+  display: grid;
+  place-items: center;
+  width: 17cqw;
+  height: 17cqw;
+  border-radius: 50%;
+  background: var(--type);
+  color: #fff;
+  font-size: 10cqw;
+  line-height: 1;
+}
+
+.rarity {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 10cqw;
+  color: var(--edge);
+  letter-spacing: 0.02em;
+}
+
+.glyph {
+  flex: 1;
+  display: grid;
+  place-items: center;
+  font-family: var(--font-kanji);
+  font-weight: 700;
+  font-size: 56cqw;
+  line-height: 1;
+  min-height: 0;
+  padding: 2cqw 6cqw;
+}
+
+.glyph > * {
+  width: 100%;
+  aspect-ratio: 1;
+}
+
+.meaning {
+  text-align: center;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 8.5cqw;
+  color: var(--ink-2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 3cqw;
+}
+
+.stats {
+  display: flex;
+  justify-content: space-between;
+  border-top: 0.6cqw solid var(--line);
+  padding-top: 3cqw;
+  font-weight: 700;
+  font-size: 12cqw;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.stats small {
+  font-size: 0.5em;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--ink-3);
+  margin-right: 0.3em;
+  vertical-align: 0.2em;
+}
+
+.def {
+  text-align: right;
+}
+
+.compact .inner {
+  padding: 5cqw 6cqw;
+}
+
+.compact .glyph {
+  font-size: 60cqw;
+  padding: 0;
+}
+
+.compact .stats {
+  font-size: 15cqw;
+  border-top: 0;
+  padding-top: 0;
+}
+
+.compact .type {
+  width: 22cqw;
+  height: 22cqw;
+  font-size: 13cqw;
+}
+
+.compact .rarity {
+  font-size: 13cqw;
+}
+
+.count {
+  position: absolute;
+  right: -1.5cqw;
+  top: -1.5cqw;
+  background: var(--ink);
+  color: var(--paper);
+  font-size: max(11px, 10cqw);
+  font-weight: 700;
+  border-radius: 999px;
+  padding: 0.1em 0.5em;
+}
+
+.new {
+  position: absolute;
+  left: 50%;
+  top: -2cqw;
+  transform: translateX(-50%);
+  background: var(--seal);
+  color: #fff;
+  font-size: max(9px, 8cqw);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border-radius: 4px;
+  padding: 0.15em 0.5em;
+}
+
+/* Rarity frames */
+.common {
+  --edge: color-mix(in srgb, var(--rarity-common) 45%, var(--line));
+}
+
+.uncommon {
+  --edge: var(--rarity-uncommon);
+  --frame: linear-gradient(160deg, #d9e4ec, var(--rarity-uncommon) 50%, #d9e4ec);
+}
+
+.rare {
+  --edge: var(--rarity-rare);
+  --frame: linear-gradient(150deg, #f3d98f, var(--rarity-rare) 40%, #8a611a 70%, #f0cf7c);
+}
+
+.epic {
+  --edge: var(--rarity-epic);
+  --frame: linear-gradient(150deg, #c9a8ff, var(--rarity-epic) 45%, #3c6fd1 80%, #c9a8ff);
+}
+
+.epic .inner {
+  box-shadow: var(--shadow), 0 0 4cqw color-mix(in srgb, var(--rarity-epic) 45%, transparent);
+}
+
+.legendary {
+  --edge: var(--rarity-legendary);
+}
+
+/* --frame must be resolved where --holo animates. */
+.legendary .inner {
+  --frame: conic-gradient(from var(--holo), #ff7a52, #ffd36e, #7de3b8, #7aa8ff, #c58bff, #ff7a52);
+  box-shadow: var(--shadow), 0 0 6cqw color-mix(in srgb, var(--rarity-legendary) 50%, transparent);
+  animation: holo 6s linear infinite;
+}
+
+.legendary .rarity {
+  background: linear-gradient(90deg, #ff7a52, #c58bff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@property --holo {
+  syntax: '<angle>';
+  inherits: true;
+  initial-value: 0deg;
+}
+
+@keyframes holo {
+  to {
+    --holo: 360deg;
+  }
+}

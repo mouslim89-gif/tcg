@@ -1,0 +1,211 @@
+.back {
+  appearance: none;
+  border: 0;
+  background: none;
+  color: var(--ink-2);
+  cursor: pointer;
+  padding: 4px 0;
+  margin-bottom: 8px;
+}
+
+.layout {
+  display: grid;
+  gap: 24px;
+}
+
+@media (min-width: 720px) {
+  .layout {
+    grid-template-columns: 280px 1fr;
+    gap: 40px;
+  }
+}
+
+.cardCol {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.cardWrap {
+  width: min(64vw, 280px);
+}
+
+.owned {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--ink-2);
+}
+
+.meaning {
+  font-size: clamp(1.6rem, 6vw, 2.2rem);
+  text-transform: capitalize;
+}
+
+.readings {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 16px 0;
+}
+
+.readings dt,
+.facts dt {
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  font-weight: 600;
+}
+
+.readings dd {
+  margin: 2px 0 0;
+  font-size: 1.15rem;
+}
+
+.facts {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin: 0 0 12px;
+}
+
+@media (min-width: 520px) {
+  .facts {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.facts div {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 10px 12px;
+}
+
+.facts dd {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.facts dd:global(.jp) {
+  font-family: var(--font-kanji);
+}
+
+.facts span {
+  font-size: 0.75rem;
+  color: var(--ink-2);
+}
+
+.types {
+  margin-top: 20px;
+}
+
+.types h2 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.2rem;
+}
+
+.typeBadge {
+  display: inline-grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 1rem;
+}
+
+.types ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 4px;
+  font-size: 0.92rem;
+}
+
+.types li span {
+  display: inline-block;
+  min-width: 118px;
+  color: var(--ink-3);
+}
+
+.words {
+  margin-top: 36px;
+  border-top: 1px solid var(--line);
+  padding-top: 20px;
+}
+
+.words h2 span {
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+.words ul {
+  list-style: none;
+  padding: 0;
+  margin: 12px 0 16px;
+  display: grid;
+  gap: 2px;
+}
+
+.words li {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  grid-template-areas:
+    'word reading tag'
+    'word gloss tag';
+  column-gap: 14px;
+  align-items: center;
+  padding: 8px 10px;
+  border-radius: 10px;
+}
+
+.words li.spellable {
+  background: color-mix(in srgb, var(--good) 12%, transparent);
+}
+
+.word {
+  grid-area: word;
+  font-size: 1.5rem;
+  min-width: 3.2em;
+}
+
+.word b {
+  color: var(--seal);
+  font-weight: 700;
+}
+
+.word a {
+  text-decoration: none;
+}
+
+.word a.missing {
+  color: var(--ink-3);
+}
+
+.reading {
+  grid-area: reading;
+  font-size: 0.95rem;
+}
+
+.gloss {
+  grid-area: gloss;
+  font-size: 0.85rem;
+  color: var(--ink-2);
+}
+
+.common {
+  grid-area: tag;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
