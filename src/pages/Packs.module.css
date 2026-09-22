@@ -235,3 +235,37 @@
   gap: 10px;
   margin-top: 12px;
 }
+
+/* Epic and legendary cards flare in their rarity colour as they land. */
+.burst_epic::before,
+.burst_legendary::before {
+  content: '';
+  position: absolute;
+  inset: -22%;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--burst) 0%, transparent 65%);
+  animation: burst 1s ease-out 0.3s both;
+  pointer-events: none;
+}
+
+.burst_epic {
+  --burst: color-mix(in srgb, var(--rarity-epic) 70%, transparent);
+}
+
+.burst_legendary {
+  --burst: color-mix(in srgb, var(--rarity-legendary) 80%, transparent);
+}
+
+@keyframes burst {
+  from {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  25% {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.35);
+  }
+}

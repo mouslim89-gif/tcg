@@ -10,6 +10,8 @@ interface Props {
   replay?: number;
   /** Full stroke-order pace (card detail) instead of the quick reveal. */
   slowStrokes?: boolean;
+  /** Pack-opening entrance: ink-stamp glyph, plus a shine on rare+ cards. */
+  reveal?: boolean;
   count?: number;
   isNew?: boolean;
   /** Shows current / max DEF in battle. */
@@ -20,13 +22,13 @@ interface Props {
   onClick?: () => void;
 }
 
-export function CardView({ card, strokes, replay, slowStrokes, count, isNew, hp, atkBonus, compact, className, onClick }: Props) {
+export function CardView({ card, strokes, replay, slowStrokes, reveal, count, isNew, hp, atkBonus, compact, className, onClick }: Props) {
   const type = TYPE_INFO[card.type];
   const Tag = onClick ? 'button' : 'div';
   return (
     <Tag
       type={onClick ? 'button' : undefined}
-      className={`${styles.card} ${styles[card.rarity]} ${compact ? styles.compact : ''} ${className ?? ''}`}
+      className={`${styles.card} ${styles[card.rarity]} ${compact ? styles.compact : ''} ${reveal ? styles.reveal : ''} ${className ?? ''}`}
       style={{ '--type': `var(--t-${card.type})` } as React.CSSProperties}
       onClick={onClick}
       aria-label={`${card.kanji}: ${card.meanings[0] ?? ''}, ${RARITY_INFO[card.rarity].name} ${type.name}, attack ${card.atk}, defense ${card.def}`}

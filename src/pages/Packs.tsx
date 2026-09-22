@@ -79,7 +79,7 @@ export function Packs() {
             {opened.cards.map((card, i) => (
               <div
                 key={i}
-                className={`${styles.slot} ${opened.flipped[i] ? styles.flipped : ''}`}
+                className={`${styles.slot} ${opened.flipped[i] ? `${styles.flipped} ${styles[`burst_${card.rarity}`] ?? ''}` : ''}`}
                 style={{ '--i': i } as React.CSSProperties}
               >
                 <button
@@ -93,7 +93,7 @@ export function Packs() {
                   {opened.flipped[i] && (
                     <CardView
                       card={card}
-                      strokes
+                      reveal
                       isNew={opened.fresh[i]}
                       onClick={() => navigate(`/card/${card.id}`)}
                     />
