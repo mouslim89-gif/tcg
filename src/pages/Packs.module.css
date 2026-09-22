@@ -165,13 +165,66 @@
   }
 }
 
+.shadow {
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  bottom: -8px;
+  height: 18px;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgb(20 14 6 / 0.35), transparent);
+  filter: blur(2px);
+}
+
+.flipper {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+}
+
+/* A card has weight: it lifts, turns, overshoots a hair and settles. */
+.flipped .flipper {
+  animation: flip 0.85s cubic-bezier(0.45, 0.05, 0.25, 1) forwards;
+}
+
+.flipped .shadow {
+  animation: lift 0.85s cubic-bezier(0.45, 0.05, 0.25, 1) forwards;
+}
+
+@keyframes flip {
+  0% {
+    transform: translateY(0) rotateY(0) scale(1);
+  }
+  45% {
+    transform: translateY(-22px) rotateY(95deg) scale(1.08);
+  }
+  80% {
+    transform: translateY(-3px) rotateY(184deg) scale(1.01);
+  }
+  100% {
+    transform: translateY(0) rotateY(180deg) scale(1);
+  }
+}
+
+@keyframes lift {
+  45% {
+    transform: scale(0.72);
+    opacity: 0.45;
+    filter: blur(6px);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+    filter: blur(2px);
+  }
+}
+
 .back,
 .front {
   position: absolute;
   inset: 0;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
-  transition: transform 0.55s cubic-bezier(0.3, 0.7, 0.3, 1);
 }
 
 .back {
@@ -187,38 +240,39 @@
   box-shadow: var(--shadow), inset 0 0 0 3px rgb(255 255 255 / 0.08);
 }
 
+/* Rare+ backs carry a quiet edge light: a hint, not a spoiler. */
 .glow_rare {
-  box-shadow: 0 0 0 2px var(--rarity-rare), 0 0 18px var(--rarity-rare);
+  box-shadow: var(--shadow), inset 0 0 0 1.5px var(--rarity-rare);
 }
 
 .glow_epic {
-  box-shadow: 0 0 0 2px var(--rarity-epic), 0 0 22px var(--rarity-epic);
+  box-shadow: var(--shadow), inset 0 0 0 1.5px var(--rarity-epic), 0 0 14px color-mix(in srgb, var(--rarity-epic) 35%, transparent);
 }
 
 .glow_legendary {
-  box-shadow: 0 0 0 2px var(--rarity-legendary), 0 0 28px var(--rarity-legendary);
-  animation: pulse 1.2s ease-in-out infinite;
-}
-
-@keyframes pulse {
-  50% {
-    box-shadow: 0 0 0 2px #ffd36e, 0 0 40px var(--rarity-legendary);
-  }
+  box-shadow: var(--shadow), inset 0 0 0 1.5px var(--rarity-legendary), 0 0 18px color-mix(in srgb, var(--rarity-legendary) 40%, transparent);
 }
 
 .front {
   transform: rotateY(180deg);
 }
 
-.flipped .back {
-  transform: rotateY(-180deg);
+/* Once landed, drop the 3D layer so the card renders crisp. */
+.settled .flipper {
+  animation: none;
+  transform: none;
 }
 
-.flipped .front {
-  transform: rotateY(0);
+.settled .front {
+  transform: none;
+}
+
+.settled .back {
+  visibility: hidden;
 }
 
 .caption {
+  animation: fade-in 0.3s ease-out 0.7s both;
   position: absolute;
   left: 0;
   right: 0;
@@ -236,36 +290,8 @@
   margin-top: 12px;
 }
 
-/* Epic and legendary cards flare in their rarity colour as they land. */
-.burst_epic::before,
-.burst_legendary::before {
-  content: '';
-  position: absolute;
-  inset: -22%;
-  border-radius: 50%;
-  background: radial-gradient(circle, var(--burst) 0%, transparent 65%);
-  animation: burst 1s ease-out 0.3s both;
-  pointer-events: none;
-}
-
-.burst_epic {
-  --burst: color-mix(in srgb, var(--rarity-epic) 70%, transparent);
-}
-
-.burst_legendary {
-  --burst: color-mix(in srgb, var(--rarity-legendary) 80%, transparent);
-}
-
-@keyframes burst {
+@keyframes fade-in {
   from {
     opacity: 0;
-    transform: scale(0.5);
-  }
-  25% {
-    opacity: 1;
-  }
-  to {
-    opacity: 0;
-    transform: scale(1.35);
   }
 }

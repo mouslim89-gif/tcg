@@ -13,6 +13,8 @@ interface Opened {
   cards: Card[];
   fresh: boolean[];
   flipped: boolean[];
+  /** Flip animation finished: the card is laid flat again (crisp, no 3D layer). */
+  settled: boolean[];
   pityTriggered: boolean;
 }
 
@@ -27,11 +29,13 @@ export function Packs() {
   const open = () => {
     if (!db) return;
     const res = openPack(db);
-    if (res) setOpened({ ...res, flipped: res.cards.map(() => false) });
+    if (res) setOpened({ ...res, flipped: res.cards.map(() => false), settled: res.cards.map(() => false) });
   };
 
   const flip = (i: number) =>
     setOpened((o) => (o ? { ...o, flipped: o.flipped.map((f, j) => f || j === i) } : o));
+  const settle = (i: number) =>
+    setOpened((o) => (o ? { ...o, settled: o.settled.map((f, j) => f || j === i) } : o));
   const flipAll = () => setOpened((o) => (o ? { ...o, flipped: o.flipped.map(() => true) } : o));
 
   const allFlipped = opened?.flipped.every(Boolean);
@@ -79,31 +83,29 @@ export function Packs() {
             {opened.cards.map((card, i) => (
               <div
                 key={i}
-                className={`${styles.slot} ${opened.flipped[i] ? `${styles.flipped} ${styles[`burst_${card.rarity}`] ?? ''}` : ''}`}
+                className={`${styles.slot} ${opened.flipped[i] ? styles.flipped : ''} ${opened.settled[i] ? styles.settled : ''}`}
                 style={{ '--i': i } as React.CSSProperties}
               >
-                <button
-                  className={`${styles.back} ${isRarePlus(card.rarity) ? styles[`glow_${card.rarity}`] : ''}`}
-                  onClick={() => flip(i)}
-                  aria-label={`Reveal card ${i + 1}`}
-                >
-                  <span className="jp">漢</span>
-                </button>
-                <div className={styles.front}>
-                  {opened.flipped[i] && (
-                    <CardView
-                      card={card}
-                      reveal
-                      isNew={opened.fresh[i]}
-                      onClick={() => navigate(`/card/${card.id}`)}
-                    />
-                  )}
-                  {opened.flipped[i] && (
-                    <span className={styles.caption} style={{ color: `var(--rarity-${card.rarity})` }}>
-                      {RARITY_INFO[card.rarity].name}
-                    </span>
-                  )}
+                <span className={styles.shadow} aria-hidden />
+                <div className={styles.flipper} onAnimationEnd={(e) => e.target === e.currentTarget && settle(i)}>
+                  <button
+                    className={`${styles.back} ${isRarePlus(card.rarity) ? styles[`glow_${card.rarity}`] : ''}`}
+                    onClick={() => flip(i)}
+                    aria-label={`Reveal card ${i + 1}`}
+                  >
+                    <span className="jp">漢</span>
+                  </button>
+                  <div className={styles.front}>
+                    {opened.flipped[i] && (
+                      <CardView card={card} foil isNew={opened.fresh[i]} onClick={() => navigate(`/card/${card.id}`)} />
+                    )}
+                  </div>
                 </div>
+                {opened.flipped[i] && (
+                  <span className={styles.caption} style={{ color: `var(--rarity-${card.rarity})` }}>
+                    {RARITY_INFO[card.rarity].name}
+                  </span>
+                )}
               </div>
             ))}
           </div>

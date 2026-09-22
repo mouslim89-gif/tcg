@@ -10,8 +10,8 @@ interface Props {
   replay?: number;
   /** Full stroke-order pace (card detail) instead of the quick reveal. */
   slowStrokes?: boolean;
-  /** Pack-opening entrance: ink-stamp glyph, plus a shine on rare+ cards. */
-  reveal?: boolean;
+  /** Holographic sheen on rare+ cards that follows the pointer. */
+  foil?: boolean;
   count?: number;
   isNew?: boolean;
   /** Shows current / max DEF in battle. */
@@ -22,15 +22,23 @@ interface Props {
   onClick?: () => void;
 }
 
-export function CardView({ card, strokes, replay, slowStrokes, reveal, count, isNew, hp, atkBonus, compact, className, onClick }: Props) {
+export function CardView({ card, strokes, replay, slowStrokes, foil, count, isNew, hp, atkBonus, compact, className, onClick }: Props) {
   const type = TYPE_INFO[card.type];
+  const shiny = foil && RARITY_INFO[card.rarity].rank >= RARITY_INFO.rare.rank;
+  // Sheen position tracks the pointer: 0–100% across the card.
+  const tilt = (e: React.PointerEvent<HTMLElement>) => {
+    const r = e.currentTarget.getBoundingClientRect();
+    e.currentTarget.style.setProperty('--mx', `${((e.clientX - r.left) / r.width) * 100}%`);
+    e.currentTarget.style.setProperty('--my', `${((e.clientY - r.top) / r.height) * 100}%`);
+  };
   const Tag = onClick ? 'button' : 'div';
   return (
     <Tag
       type={onClick ? 'button' : undefined}
-      className={`${styles.card} ${styles[card.rarity]} ${compact ? styles.compact : ''} ${reveal ? styles.reveal : ''} ${className ?? ''}`}
+      className={`${styles.card} ${styles[card.rarity]} ${compact ? styles.compact : ''} ${className ?? ''}`}
       style={{ '--type': `var(--t-${card.type})` } as React.CSSProperties}
       onClick={onClick}
+      onPointerMove={shiny ? tilt : undefined}
       aria-label={`${card.kanji}: ${card.meanings[0] ?? ''}, ${RARITY_INFO[card.rarity].name} ${type.name}, attack ${card.atk}, defense ${card.def}`}
     >
       <span className={styles.inner}>
@@ -52,6 +60,7 @@ export function CardView({ card, strokes, replay, slowStrokes, reveal, count, is
             /> : card.kanji}
         </span>
         {!compact && <span className={styles.meaning}>{card.meanings[0] ?? '—'}</span>}
+        {shiny && <span className={styles.sheen} aria-hidden />}
         <span className={styles.stats}>
           <span className={styles.atk}>
             <small>ATK</small>
