@@ -9,6 +9,10 @@
   stroke-linejoin: round;
 }
 
+.ghost {
+  opacity: 0.14;
+}
+
 .draw {
   stroke-dasharray: 1;
   stroke-dashoffset: 1;

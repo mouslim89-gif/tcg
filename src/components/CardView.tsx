@@ -39,7 +39,7 @@ export function CardView({ card, strokes, replay, count, isNew, hp, atkBonus, co
           </span>
         </span>
         <span className={styles.glyph}>
-          {strokes ? <KanjiStroke id={card.id} kanji={card.kanji} animate replay={replay} /> : card.kanji}
+          {strokes ? <KanjiStroke id={card.id} kanji={card.kanji} animate replay={replay} speed={0.12} total={0.9} /> : card.kanji}
         </span>
         {!compact && <span className={styles.meaning}>{card.meanings[0] ?? '—'}</span>}
         <span className={styles.stats}>
