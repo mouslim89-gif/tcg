@@ -1,0 +1,19 @@
+{
+  "generatedAt": "2026-09-22",
+  "cardCount": 6418,
+  "wordCount": 103510,
+  "sources": [
+    {
+      "name": "KANJIDIC2",
+      "version": "jamdict-data 1.5 (2021-04-17)"
+    },
+    {
+      "name": "JMdict",
+      "version": "191541 entries"
+    },
+    {
+      "name": "KanjiVG",
+      "version": "2026-09-09"
+    }
+  ]
+}
